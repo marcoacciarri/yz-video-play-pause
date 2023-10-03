@@ -29,25 +29,23 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
-	// Create an Intersection Observer
-	const options = {
-		threshold: 0.5, // Adjust this threshold as needed
-	};
-
+	// Create an Intersection Observer to play pause
 	const observer = new IntersectionObserver((entries) => {
 		entries.forEach((entry) => {
-			const videoElement = entry.target;
-			const videoPlayer = new Vimeo.Player(videoElement);
+			const video = entry.target;
+			const player = new Vimeo.Player(video);
 
-			if (entry.isIntersecting) {
-				// Video is in view, so play it
-				videoPlayer.play();
-			} else {
-				// Video is out of view, so pause it
-				videoPlayer.pause();
-			}
+			player.ready().then(function () {
+				if (entry.isIntersecting) {
+					// Video is in view, so play it
+					player.play();
+				} else {
+					// Video is out of view, so pause it
+					player.pause();
+				}
+			});
 		});
-	}, options);
+	}, { threshold: 0.5 });
 
 	// Observe the video elements
 	const videoElements = $('iframe[src^="https://player.vimeo.com"]');

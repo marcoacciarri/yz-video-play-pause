@@ -20,7 +20,8 @@
  * @subpackage Video_Play_Pause/public
  * @author     Marco Acciarri <dev@yourzone.website>
  */
-class Video_Play_Pause_Public {
+class Video_Play_Pause_Public
+{
 
 	/**
 	 * The ID of this plugin.
@@ -47,11 +48,11 @@ class Video_Play_Pause_Public {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct($plugin_name, $version)
+	{
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -59,7 +60,8 @@ class Video_Play_Pause_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -73,7 +75,7 @@ class Video_Play_Pause_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/video-play-pause-public.css', array(), $this->version, 'all' );
+		//wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/video-play-pause-public.css', array(), $this->version, 'all' );
 
 	}
 
@@ -82,7 +84,8 @@ class Video_Play_Pause_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -97,7 +100,37 @@ class Video_Play_Pause_Public {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/video-play-pause-public.js', array( 'jquery' ), $this->version, false );
-
 	}
 
+	public function show_assets_in_header()
+	{
+		global $post;
+		if (is_object($post)) {
+			global $wp_scripts;
+			echo '<pre style="color:black">';
+			print_r($wp_scripts->done);
+			echo '</pre>';
+
+			global $wp_styles;
+			echo '<pre style="color:black">';
+			print_r($wp_styles->done);
+			echo '</pre>';
+		}
+	}
+
+	public function show_assets_in_footer()
+	{
+		global $post;
+		if (is_object($post)) {
+			global $wp_scripts;
+			echo '<pre style="color:black">';
+			print_r($wp_scripts->done);
+			echo '</pre>';
+
+			global $wp_styles;
+			echo '<pre style="color:black">';
+			print_r($wp_styles->done);
+			echo '</pre>';
+		}
+	}
 }

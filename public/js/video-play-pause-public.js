@@ -1,4 +1,4 @@
-(function( $ ) {
+(function ($) {
 	'use strict';
 
 	/**
@@ -29,4 +29,35 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
-})( jQuery );
+	// Create an Intersection Observer
+	const options = {
+		threshold: 0.5, // Adjust this threshold as needed
+	};
+
+	const observer = new IntersectionObserver((entries) => {
+		console.log(entries);
+		entries.forEach((entry) => {
+			const videoElement = entry.target;
+			const videoPlayer = new Vimeo.Player(videoElement);
+			console.log(videoPlayer.getVideoTitle());
+
+			if (entry.isIntersecting) {
+				// Video is in view, so play it
+				console.log('visible');
+				videoPlayer.play();
+			} else {
+				// Video is out of view, so pause it
+				console.log('not visibile');
+				videoPlayer.pause();
+			}
+		});
+	}, options);
+
+	// Observe the video elements
+	const videoElements = $('iframe[src^="https://player.vimeo.com"]');
+	console.log(videoElements)
+	videoElements.each(function () {
+		observer.observe(this);
+	});
+
+})(jQuery);

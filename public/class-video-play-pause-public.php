@@ -100,7 +100,7 @@ class Video_Play_Pause_Public
 		 */
 
 		wp_enqueue_script('vimeo-player-sdk', 'https://player.vimeo.com/api/player.js', array(), null, true);
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/video-play-pause-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/video-play-pause-public.js', array('jquery', 'vimeo-player-sdk'), $this->version, true);
 	}
 
 	public function show_assets_in_header()

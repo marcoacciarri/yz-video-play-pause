@@ -35,19 +35,15 @@
 	};
 
 	const observer = new IntersectionObserver((entries) => {
-		console.log(entries);
 		entries.forEach((entry) => {
 			const videoElement = entry.target;
 			const videoPlayer = new Vimeo.Player(videoElement);
-			console.log(videoPlayer.getVideoTitle());
 
 			if (entry.isIntersecting) {
 				// Video is in view, so play it
-				console.log('visible');
 				videoPlayer.play();
 			} else {
 				// Video is out of view, so pause it
-				console.log('not visibile');
 				videoPlayer.pause();
 			}
 		});
@@ -55,7 +51,6 @@
 
 	// Observe the video elements
 	const videoElements = $('iframe[src^="https://player.vimeo.com"]');
-	console.log(videoElements)
 	videoElements.each(function () {
 		observer.observe(this);
 	});

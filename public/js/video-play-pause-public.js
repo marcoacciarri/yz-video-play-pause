@@ -37,8 +37,21 @@
 
 			player.ready().then(function () {
 				if (entry.isIntersecting) {
-					// Video is in view, so play it
-					player.play();
+
+					// Video is in view
+					player.getMuted().then(function (muted) {
+
+						if (muted) {
+							// If muted, autplay
+							player.play();
+						} else if (hasUserInteracted) {
+							// If not muted, autoplay only if user has interacted
+							player.setVolume(1);
+							player.play();
+						}
+
+					});
+
 				} else {
 					// Video is out of view, so pause it
 					player.pause();
@@ -51,6 +64,18 @@
 	const videoElements = $('iframe[src^="https://player.vimeo.com"]');
 	videoElements.each(function () {
 		observer.observe(this);
+	});
+
+	// Function to check if the user has interacted with the document
+	const hasUserInteracted = (function () {
+		return userHasInteracted;
+	});
+
+	// Listen for a user interaction event, e.g., a click
+	let userHasInteracted = false;
+	$(document).on('click tap', function () {
+		// Set the userHasInteracted flag to true when a click event occurs
+		userHasInteracted = true;
 	});
 
 })(jQuery);

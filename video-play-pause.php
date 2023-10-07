@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              https://yourzone.website
- * @since             1.0.1
+ * @since             1.0.2
  * @package           Video_Play_Pause
  *
  * @wordpress-plugin
  * Plugin Name:       Vimeo Play Pause
  * Plugin URI:        https://yourzone.website
  * Description:       Plays and Pauses videos only when in view.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Marco Acciarri
  * Author URI:        https://yourzone.website/
  * License:           GPL-2.0+

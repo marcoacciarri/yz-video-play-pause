@@ -58,7 +58,7 @@
 				}
 			});
 		});
-	}, { threshold: 0.5 });
+	}, { threshold: 0.8 });
 
 	// Observe the video elements
 	const videoElements = $('iframe[src^="https://player.vimeo.com"]');

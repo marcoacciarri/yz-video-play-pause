@@ -23,10 +23,6 @@
 	 *
 	 * ...and/or other possibilities.
 	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
 	 */
 
 	// Create an Intersection Observer to play pause
@@ -71,11 +67,59 @@
 		return userHasInteracted;
 	});
 
-	// Listen for a user interaction event, e.g., a click
+	let topSectionIsSticky = false;
+	const hasTopStickySection = (function () {
+		return topSectionIsSticky;
+	});
+
+	// Get Elementor sections
+	const sections = document.querySelectorAll('section.elementor-section');
+
+	// Manage is top section sticky
+	const initializeStickySection = (function () {
+		if (sections.length > 0 && sections[0].classList.contains('make-sticky')) {
+
+			let style = document.createElement('style');
+			style.type = 'text/css';
+			const stickyClass = `.make-sticky {
+				position: -webkit-sticky;
+				position: sticky;
+				top: 0;
+				z-index: 100; 
+			}`;
+
+			if (style.styleSheet) {
+				style.styleSheet.cssText = cssClass; // For IE
+			} else {
+				style.appendChild(document.createTextNode(stickyClass));
+			}
+			document.head.appendChild(style);
+
+			topSectionIsSticky = true;
+		}
+	});
+
+	// Listen for a user click event
 	let userHasInteracted = false;
 	$(document).on('click tap', function () {
+
+		if (hasTopStickySection) {
+			//Remove top section stickyness
+			sections[0].style.position = "relative";
+
+			// Scroll to section after the top sticky section
+			if (sections[1]) {
+				sections[1].scrollIntoView({ behavior: 'smooth' });
+			}
+
+			// Set topSectionIsSticky flag to false so scrollIntoView doesn't happen again
+			topSectionIsSticky = false;
+		}
+
 		// Set the userHasInteracted flag to true when a click event occurs
 		userHasInteracted = true;
 	});
+
+	initializeStickySection();
 
 })(jQuery);

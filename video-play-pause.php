@@ -16,7 +16,7 @@
  * Plugin Name:       Vimeo Play Pause
  * Plugin URI:        https://yourzone.website
  * Description:       Plays and Pauses videos only when in view.
- * Version:           1.1.2
+ * Version:           1.1.0
  * Author:            Marco Acciarri
  * Author URI:        https://yourzone.website/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('VIDEO_PLAY_PAUSE_VERSION', '1.0.1');
+define('VIDEO_PLAY_PAUSE_VERSION', '1.1.0');
 
 /**
  * The code that runs during plugin activation.

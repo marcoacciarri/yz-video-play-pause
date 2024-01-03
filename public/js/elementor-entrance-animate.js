@@ -1,30 +1,6 @@
 (function () {
     'use strict';
 
-    /**
-     * All of the code for your public-facing JavaScript source
-     * should reside in this file.
-     *
-     * Note: It has been assumed you will write jQuery code here, so the
-     * $ function reference has been prepared for usage within the scope
-     * of this function.
-     *
-     * This enables you to define handlers, for when the DOM is ready:
-     *
-     * $(function() {
-     *
-     * });
-     *
-     * When the window is loaded:
-     *
-     * $( window ).load(function() {
-     *
-     * });
-     *
-     * ...and/or other possibilities.
-     *
-     */
-
     // Elementor adds the .animated class right before the element is in view
     // Animation classes we want to handle
     const animateClasses = ['slideInLeft', 'slideInRight', 'zoomIn'];
@@ -79,7 +55,7 @@
     }, {
         root: null, // relative to the viewport
         rootMargin: '0px',
-        threshold: 1 // halfway on the screen 
+        threshold: 1
     });
 
     // Initialize a MutationObserver

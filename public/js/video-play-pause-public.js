@@ -1,31 +1,13 @@
-(function ($) {
+(function () {
 	'use strict';
 
-	/**
-	 * All of the code for your public-facing JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note: It has been assumed you will write jQuery code here, so the
-	 * $ function reference has been prepared for usage within the scope
-	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 */
+	// Function to check if the user has interacted with the document
+	let userHasInteracted = false;
+	const hasUserInteracted = (function () {
+		return userHasInteracted;
+	});
 
-	// Create an Intersection Observer to play pause
+	// Create an Intersection Observer to play pause videos as they enter / exit view
 	const observer = new IntersectionObserver((entries) => {
 		entries.forEach((entry) => {
 			const video = entry.target;
@@ -57,16 +39,12 @@
 	}, { threshold: 0.8 });
 
 	// Observe the video elements
-	const videoElements = $('iframe[src^="https://player.vimeo.com"]');
-	videoElements.each(function () {
+	const videoElements = document.querySelectorAll('iframe[src^="https://player.vimeo.com"]');
+	videoElements.forEach(function () {
 		observer.observe(this);
 	});
 
-	// Function to check if the user has interacted with the document
-	const hasUserInteracted = (function () {
-		return userHasInteracted;
-	});
-
+	// Function to check if top section is sticky
 	let topSectionIsSticky = false;
 	const hasTopStickySection = (function () {
 		return topSectionIsSticky;
@@ -75,34 +53,31 @@
 	// Get Elementor sections
 	const sections = document.querySelectorAll('section.elementor-section');
 
-	// Manage is top section sticky
+	// Initialize top sticky section
 	const initializeStickySection = (function () {
 		if (sections.length > 0 && sections[0].classList.contains('make-sticky')) {
 
+			// Apply stickiness to top section
 			let style = document.createElement('style');
 			style.type = 'text/css';
-			const stickyClass = `.make-sticky {
+			style.id = 'make-sticky';
+			const css = `
+			.make-sticky {
 				position: -webkit-sticky;
 				position: sticky;
 				top: 0;
 				z-index: 100; 
 			}`;
 
-			if (style.styleSheet) {
-				style.styleSheet.cssText = cssClass; // For IE
-			} else {
-				style.appendChild(document.createTextNode(stickyClass));
-			}
+			style.appendChild(document.createTextNode(css));
 			document.head.appendChild(style);
 
 			topSectionIsSticky = true;
 		}
 	});
 
-	// Listen for a user click event
-	let userHasInteracted = false;
-	$(document).on('click tap', function () {
-
+	// Function to remove the stickiness on top section
+	const removeStickySection = (function () {
 		if (hasTopStickySection) {
 			//Remove top section stickyness
 			sections[0].style.position = "relative";
@@ -117,9 +92,14 @@
 		}
 
 		// Set the userHasInteracted flag to true when a click event occurs
+		// This is for the video autoplay functions
 		userHasInteracted = true;
 	});
 
+	// Listen for a user click / tap event
+	document.addEventListener('click', removeStickySection);
+	document.addEventListener('touchstart', removeStickySection);
+
 	initializeStickySection();
 
-})(jQuery);
+})();

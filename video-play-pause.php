@@ -13,9 +13,9 @@
  * @package           Video_Play_Pause
  *
  * @wordpress-plugin
- * Plugin Name:       Vimeo Play Pause
+ * Plugin Name:       Site Extra Functions
  * Plugin URI:        https://yourzone.website
- * Description:       Plays and Pauses videos only when in view.
+ * Description:       Plays / Pauses videos only when in view and manage Elementor animations.
  * Version:           1.1.0
  * Author:            Marco Acciarri
  * Author URI:        https://yourzone.website/

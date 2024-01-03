@@ -18,11 +18,14 @@
 
 					// Video is in view
 					player.getMuted().then(function (muted) {
+						console.log('muted: ', muted);
 
 						if (muted) {
 							// If muted, autplay
 							player.play();
-						} else if (hasUserInteracted) {
+						}
+
+						if (hasUserInteracted) {
 							// If not muted, autoplay only if user has interacted
 							player.setVolume(1);
 							player.play();
@@ -40,8 +43,8 @@
 
 	// Observe the video elements
 	const videoElements = document.querySelectorAll('iframe[src^="https://player.vimeo.com"]');
-	videoElements.forEach(function () {
-		observer.observe(this);
+	videoElements.forEach(function (element) {
+		observer.observe(element);
 	});
 
 	// Function to check if top section is sticky
@@ -50,12 +53,20 @@
 		return topSectionIsSticky;
 	});
 
+	// Function to check if Elementor is in edit mode
+	const isInElementorEditMode = (function () {
+		return document.body.classList.contains('elementor-editor-active');
+	});
+
 	// Get Elementor sections
 	const sections = document.querySelectorAll('section.elementor-section');
 
 	// Initialize top sticky section
 	const initializeStickySection = (function () {
-		if (sections.length > 0 && sections[0].classList.contains('make-sticky')) {
+		if (
+			sections.length > 0 &&
+			sections[0].classList.contains('make-sticky')
+		) {
 
 			// Apply stickiness to top section
 			let style = document.createElement('style');
@@ -83,7 +94,7 @@
 			sections[0].style.position = "relative";
 
 			// Scroll to section after the top sticky section
-			if (sections[1]) {
+			if (!isInElementorEditMode && sections[1]) {
 				sections[1].scrollIntoView({ behavior: 'smooth' });
 			}
 
@@ -94,6 +105,7 @@
 		// Set the userHasInteracted flag to true when a click event occurs
 		// This is for the video autoplay functions
 		userHasInteracted = true;
+		console.log('userHasInteracted: ', userHasInteracted);
 	});
 
 	// Listen for a user click / tap event
@@ -101,5 +113,4 @@
 	document.addEventListener('touchstart', removeStickySection);
 
 	initializeStickySection();
-
 })();

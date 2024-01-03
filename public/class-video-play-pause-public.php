@@ -100,7 +100,7 @@ class Video_Play_Pause_Public
 		 */
 
 		wp_enqueue_script('vimeo-player-sdk', 'https://player.vimeo.com/api/player.js', array(), null, true);
-		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/video-play-pause-public.js', array('jquery', 'vimeo-player-sdk'), $this->version, true);
+		wp_enqueue_script('vimeo-autplay', plugin_dir_url(__FILE__) . 'js/video-play-pause-public.js', array('jquery', 'vimeo-player-sdk'), time(), true);
 		wp_enqueue_script('elmentor-entrance-animate', plugin_dir_url(__FILE__) . 'js/elementor-entrance-animate.js', array('jquery'), $this->version, true);
 	}
 

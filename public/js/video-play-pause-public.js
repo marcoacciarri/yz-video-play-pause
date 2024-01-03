@@ -58,43 +58,69 @@
 		return document.body.classList.contains('elementor-editor-active');
 	});
 
+	// Intersection observer that 
+	const sectionObserver = new IntersectionObserver(function (entries, observer) {
+		entries.forEach(function (entry) {
+
+			// Sticky Section has reached top
+			if (entry.isIntersecting && entry.boundingClientRect.top <= 0) {
+
+				// Add no scroll effect to body
+				document.body.classList.add('no-scroll');
+
+				// Stop observing the element
+				observer.unobserve(entry.target);
+
+				topSectionIsSticky = true;
+			}
+		});
+	}, { threshold: [1.0] });
+
 	// Get Elementor sections
-	const sections = document.querySelectorAll('section.elementor-section');
+	const sections = document.querySelectorAll('body:not(.elementor-editor-active) section.elementor-section');
 
 	// Initialize top sticky section
 	const initializeStickySection = (function () {
-		if (
-			sections.length > 0 &&
-			sections[0].classList.contains('make-sticky')
-		) {
+		if (sections.length > 0 && sections[0].classList.contains('make-sticky')) {
 
-			// Apply stickiness to top section
+			// create css for .make-sticky class
 			let style = document.createElement('style');
 			style.type = 'text/css';
 			style.id = 'make-sticky';
 			const css = `
+			/* class that makes element sticky */
 			.make-sticky {
 				position: -webkit-sticky;
 				position: sticky;
 				top: 0;
 				z-index: 100; 
+			}
+			
+			/* class for no scroll effect on element */
+			.no-scroll {
+				height: 100%;
+				overflow: hidden;
 			}`;
 
 			style.appendChild(document.createTextNode(css));
 			document.head.appendChild(style);
 
-			topSectionIsSticky = true;
+			// Observe element
+			sectionObserver.observe(sections[0]);
 		}
 	});
 
 	// Function to remove the stickiness on top section
 	const removeStickySection = (function () {
 		if (hasTopStickySection) {
-			//Remove top section stickyness
+			// Remove top section stickyness
 			sections[0].style.position = "relative";
 
+			// Remove body no scroll
+			document.body.classList.remove('no-scroll');
+
 			// Scroll to section after the top sticky section
-			if (!isInElementorEditMode && sections[1]) {
+			if (sections[1]) {
 				sections[1].scrollIntoView({ behavior: 'smooth' });
 			}
 

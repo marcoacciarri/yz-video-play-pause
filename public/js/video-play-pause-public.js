@@ -7,7 +7,7 @@
 		return userHasInteracted;
 	});
 
-	// Create an Intersection Observer to play pause videos as they enter / exit view
+	// Intersection Observer to play pause videos as they enter / exit view
 	const observer = new IntersectionObserver((entries) => {
 		entries.forEach((entry) => {
 			const video = entry.target;
@@ -18,15 +18,14 @@
 
 					// Video is in view
 					player.getMuted().then(function (muted) {
-						console.log('muted: ', muted);
 
 						if (muted) {
-							// If muted, autplay
+							// If muted, autoplay
 							player.play();
 						}
 
 						if (hasUserInteracted) {
-							// If not muted, autoplay only if user has interacted
+							// autoplay with volume only if user has interacted
 							player.setVolume(1);
 							player.play();
 						}
@@ -47,18 +46,17 @@
 		observer.observe(element);
 	});
 
-	// Function to check if top section is sticky
+	// Var to check if top section is sticky
 	let topSectionIsSticky = false;
-	const hasTopStickySection = (function () {
-		return topSectionIsSticky;
+
+	// Var scroll has happened after user click
+	let hasScrolledOnce = false;
+
+	const scrollToElement = (function (element) {
+		element.scrollIntoView({ behavior: 'smooth' });
 	});
 
-	// Function to check if Elementor is in edit mode
-	const isInElementorEditMode = (function () {
-		return document.body.classList.contains('elementor-editor-active');
-	});
-
-	// Intersection observer that 
+	// Intersection observer for when sticky section has reached top of window
 	const sectionObserver = new IntersectionObserver(function (entries, observer) {
 		entries.forEach(function (entry) {
 
@@ -71,18 +69,52 @@
 				// Stop observing the element
 				observer.unobserve(entry.target);
 
+				// Flag top section as sticky
 				topSectionIsSticky = true;
 			}
 		});
 	}, { threshold: [1.0] });
 
-	// Get Elementor sections
-	const sections = document.querySelectorAll('body:not(.elementor-editor-active) section.elementor-section');
+	// Function to remove the stickiness on top section
+	const handleUserClick = (function (event) {
+		const sections = document.querySelectorAll('body:not(.elementor-editor-active) section.elementor-section');
+
+		// Check if clicked element is Elementor button
+		const isButton = Array.from(event.target.classList).some(className => className.startsWith('elementor-button'));
+
+		if (sections.length > 0 && (topSectionIsSticky || isButton)) {
+			// Remove top section stickyness
+			sections[0].classList.remove('make-sticky');
+
+			// Remove no scroll effect from body
+			document.body.classList.remove('no-scroll');
+
+			// Hide the button that is suppose to trigger click
+			const button = sections[0].querySelector('.elementor-widget-button');
+			if (button) button.style.opacity = '0';
+
+			// Scroll to section after the top sticky section
+			if (sections[1] && !hasScrolledOnce) {
+				scrollToElement(sections[1]);
+
+				hasScrolledOnce = true;
+			}
+
+			// Top section is not sticky anymore
+			topSectionIsSticky = false;
+		}
+
+		// Set the userHasInteracted flag to true when a click event occurs
+		// This is for the video autoplay functions
+		userHasInteracted = true;
+	});
 
 	// Initialize top sticky section
 	const initializeStickySection = (function () {
-		if (sections.length > 0 && sections[0].classList.contains('make-sticky')) {
+		// User applies .make-sticky class through Elementor if they want this behaviour
+		const stickySection = document.querySelector('.make-sticky');
 
+		if (stickySection) {
 			// create css for .make-sticky class
 			let style = document.createElement('style');
 			style.type = 'text/css';
@@ -106,37 +138,13 @@
 			document.head.appendChild(style);
 
 			// Observe element
-			sectionObserver.observe(sections[0]);
+			sectionObserver.observe(stickySection);
+
+			// Listen for a user click / tap event
+			document.addEventListener('click', handleUserClick);
+			document.addEventListener('touchstart', handleUserClick);
 		}
 	});
-
-	// Function to remove the stickiness on top section
-	const removeStickySection = (function () {
-		if (hasTopStickySection) {
-			// Remove top section stickyness
-			sections[0].style.position = "relative";
-
-			// Remove body no scroll
-			document.body.classList.remove('no-scroll');
-
-			// Scroll to section after the top sticky section
-			if (sections[1]) {
-				sections[1].scrollIntoView({ behavior: 'smooth' });
-			}
-
-			// Set topSectionIsSticky flag to false so scrollIntoView doesn't happen again
-			topSectionIsSticky = false;
-		}
-
-		// Set the userHasInteracted flag to true when a click event occurs
-		// This is for the video autoplay functions
-		userHasInteracted = true;
-		console.log('userHasInteracted: ', userHasInteracted);
-	});
-
-	// Listen for a user click / tap event
-	document.addEventListener('click', removeStickySection);
-	document.addEventListener('touchstart', removeStickySection);
 
 	initializeStickySection();
 })();
